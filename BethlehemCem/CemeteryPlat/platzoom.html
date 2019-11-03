@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Bethlehem Cemetery Burial Plat </title>
+<script language="javascript">
+
+// Configure zoOom
+
+//-----------------------------------------------------------------
+//-----------Set Zoom Variables-----------------------------------------
+var img_path="cemeteryplat.jpg"; // The Image Path                     |
+var top_pos=70;          // Image position from top              |
+var left_pos=10;         // Image position from left             |
+var max_width=3675;        // Max allowable width                  |
+var min_width=900;         // Min allowable width                  |
+var time_length=1;        // Zoom delay in milliseconds           |
+var step=35;               // Pixels by which image should zoomm   |
+//-----------------------------------------------------------------
+
+document.write('<div id="q_div" style="position:absolute; top:' + top_pos + '; left:' + left_pos + '"><img src="' + img_path + '" border="3" bordercolor="#000000" name="z" alt="zoOom"></div>');
+
+img_act_width=z.width;
+img_act_height=z.height;
+var original_time=time_length;
+
+function zoom_out()
+{
+ if(z.width==0)
+  {
+   z.border=0;
+  }
+ if(z.width!=0)
+  {
+   if(z.width>min_width)
+   {
+    z.width-=step;
+    z.height=Math.round(z.width*((img_act_height)/(img_act_width)));
+    setTimeout("zoom_out()",time_length);
+   }
+   else
+   {
+    window.alert('Minimum Size Reached.');
+   }
+  }  
+} 
+
+function zoom_in()
+{
+ if(z.width==0)
+  {
+   z.border=0;
+  }
+ if(z.width!=0)
+  {
+   if(z.width<max_width)
+   {
+    z.width+=step;
+    z.height=Math.round(z.width*((img_act_height)/(img_act_width)));
+    setTimeout("zoom_in()",time_length);
+   }
+   else
+   {
+    window.alert('Maximum Size Reached.');
+   }
+  }  
+} 
+
+function resume_zoom()
+{
+ time_length=original_time;
+}
+
+function pause_zoom()
+{
+ time_length=10000000000;
+}
+
+function set_original()
+{
+ z.width=img_act_width;
+ z.height=img_act_height;
+}
+
+</script>
+</head>
+<body>
+
+<table cellspacing="2" cellpadding="2" align="left" summary="Links to zooming">
+	<tr>
+		<!--Begin Zoom-->
+		<td style="border:2 solid #000000" align="middle">
+		<a href="#" onmouseover="javascript:resume_zoom();zoom_in();" onmouseout="javascript:pause_zoom();" style="font-family:verdana,arial,helvetica; font-weight:bold; font-size:9pt; color:#003399; text-decoration:none">
+		<font color="#808080">Zoom In</font></a>
+		</td>
+		
+		<td style="border:2 solid #000000" align="middle">
+		<a href="#" onmouseover="javascript:resume_zoom();set_original();" style="font-family:verdana,arial,helvetica; font-weight:bold; font-size:9pt; color:#000000; text-decoration:none">Original</a>
+		</td>
+		
+		<td style="border:2 solid #000000" align="middle">
+		<a href="#" onmouseover="javascript:resume_zoom();zoom_out();" onmouseout="javascript:pause_zoom();" style="font-family:verdana,arial,helvetica; font-weight:bold; font-size:9pt; color:#003399; text-decoration:none">
+		<font color="#808080">Zoom Out </font></a>
+		</td>
+		
+		<td style="border:0 solid #000000" align="middle">
+		<font size="2"color="#ff0000"><i>(Max Zoom Out provides birds eye view of plat.)</i></font>
+		</td>
+		<!--End Zoom-->
+	</tr>
+	
+	<tr>
+		<!-- Instructions on Use of Buttons -->
+		<td colspan="4" valign="top">
+		<div align="left"><font size="2" color="#000000">
+		Place and hold cursor over chosen action until size is as desired.</font>
+		<!-- Return to Index page -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="bethlehem.htm" onmouseover="window.status='Return Home'; return true" onmouseout="window.status=''; return true"><font face="arial" size="2">Return Home</font></a>
+		</font></div>
+		</td>
+	
+	</tr>
+</table>
+
+</body>
+</html>
