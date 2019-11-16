@@ -1,3 +1,42 @@
 * {
-    font-family: sans-serif;
+    font-family: "Comic Sans MS", sans-serif;
+}
+
+body {
+    background-image: url("https://smtc-website.s3.us-east-2.amazonaws.com/backgroundv.jpg");
+}
+
+a {
+    font-weight: bold;
+    color: #000080;
+}
+
+li {
+    font-size: 13px;
+    color: #800000;
+}
+
+.top-headings {
+    font-weight: bold;
+    text-align: center;
+}
+
+.top-headings .red-heading {
+    color: #AF2F1D;
+}
+
+.blue-heading {
+    font-weight: bold;
+    font-size: 18px;
+    color: #000080;
+}
+
+.red-heading {
+    font-weight: bold;
+    font-size: 13px;
+    color: #CC3300;
+}
+
+.revolutionary {
+    color: #FF0000;
 }
