@@ -64,3 +64,6 @@
 
 # Mac
 *.DS_Store
+
+# Mac
+*_vti_pvt
