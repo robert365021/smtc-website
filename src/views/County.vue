@@ -3,7 +3,13 @@
 </template>
 
 <script>
+// import * from '../data/bedford';
+
 export default {
   name: 'County',
+
+  created() {
+    console.log("farts")
+  }
 };
 </script>
