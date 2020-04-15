@@ -63,7 +63,7 @@ def get_updated_link(link, dir_path, attempt):
 
 paths = get_html_paths()
 
-chosen_path = paths["./AlabamaCemeteriesWeb/ColbertCounty/CarpenterCem/CarpenterReunion.html"]
+chosen_path = paths["./Giles-Marshall-LincolnCountyCemWeb/Abernathy(Alan)CemGilesCo/Abernathy(Alan)CemListing.html"]
 rel_path_full = os.path.relpath(chosen_path)
 
 if "Giles-Marshall-LincolnCountyCemWeb/" in rel_path_full:
