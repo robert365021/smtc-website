@@ -1,3 +1,4 @@
+import csv
 import re
 import fnmatch
 import os
@@ -7,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def get_html_paths():
     paths = {}
-    for root, dirnames, filenames in os.walk('.'):
+    for root, dirnames, filenames in os.walk('./AdkisonCem'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
             paths[path] = path
@@ -19,25 +20,25 @@ def attempt_update_link(link):
     else:
         return get_updated_link(link, dir_path, 0)
 
-def update_anchor_links_in_html(soup, dir_path):
+def update_anchor_links_in_html(soup, dir_path, full_path):
     for anchor in soup.findAll('a'):
         link = anchor.get('href')
         new_link = attempt_update_link(link)
         if new_link == "-1":
             anchor['href'] = link
         elif new_link == "":
-            print(f'FAIL: {link}')
+            fail_rows.append([full_path, link])
         else:
             anchor['href'] = new_link
 
-def update_image_links_in_html(soup, dir_path):
+def update_image_links_in_html(soup, dir_path, full_path):
     for image in soup.findAll('img'):
         link = image.get('src')
         new_link = attempt_update_link(link)
         if new_link == "-1":
             image['src'] = link
         elif new_link == "":
-            print(f'FAIL: {link}')
+            fail_rows.append([full_path, link])
         else:
             image['src'] = new_link
 
@@ -61,24 +62,30 @@ def get_updated_link(link, dir_path, attempt):
             else:
                 return ""
 
+fail_fields = ['source_file', 'suspicious_link']
+fail_rows = []
 paths = get_html_paths()
 
-chosen_path = paths["./Giles-Marshall-LincolnCountyCemWeb/Abernathy(Alan)CemGilesCo/Abernathy(Alan)CemListing.html"]
-rel_path_full = os.path.relpath(chosen_path)
+for path in paths:
+    rel_path_full = os.path.relpath(path)
 
-if "Giles-Marshall-LincolnCountyCemWeb/" in rel_path_full:
-    rel_path_full = rel_path_full.replace("Giles-Marshall-LincolnCountyCemWeb/", "Giles-Marshall-LincolnCountyCemWebImages/")
+    if "Giles-Marshall-LincolnCountyCemWeb/" in rel_path_full:
+        rel_path_full = rel_path_full.replace("Giles-Marshall-LincolnCountyCemWeb/", "Giles-Marshall-LincolnCountyCemWebImages/")
 
-if "AlabamaCemeteriesWeb/" in rel_path_full:
-    rel_path_full = rel_path_full.replace("AlabamaCemeteriesWeb/", "AlabamaCemeteriesImages/")
+    if "AlabamaCemeteriesWeb/" in rel_path_full:
+        rel_path_full = rel_path_full.replace("AlabamaCemeteriesWeb/", "AlabamaCemeteriesImages/")
 
-dir_path = rel_path_full[:rel_path_full.rindex("/")]
+    dir_path = rel_path_full[:rel_path_full.rindex("/")]
 
-print(dir_path)
-print("updating links for " + chosen_path)
-soup = BeautifulSoup(open(chosen_path), "html5lib")
-update_anchor_links_in_html(soup, dir_path)
-update_image_links_in_html(soup, dir_path)
+    print("updating links for " + path)
+    soup = BeautifulSoup(open(path), "html5lib")
+    update_anchor_links_in_html(soup, dir_path, path)
+    update_image_links_in_html(soup, dir_path, path)
 
-with open(chosen_path, "w") as file:
-    file.write(str(soup))
+    with open(path, "w") as file:
+        file.write(str(soup))
+
+with open('fix.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(fail_fields)
+    csvwriter.writerows(fail_rows)
