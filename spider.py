@@ -53,7 +53,7 @@ def get_updated_link(link, dir_path, attempt):
 
 paths = get_html_paths()
 
-chosen_path = paths["./DerryberryHardison/DerryberryList.html"]
+chosen_path = paths["./Brooks(Abner)Cem/Brooks(Abner)CemList.html"]
 rel_path_full = os.path.relpath(chosen_path)
 dir_path = rel_path_full[:rel_path_full.rindex("/")]
 
