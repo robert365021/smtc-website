@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 def get_html_paths():
     paths = {}
-    for root, dirnames, filenames in os.walk('./AdkisonCem'):
+    for root, dirnames, filenames in os.walk('./Akers-BrownCemetery'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
             paths[path] = path
@@ -27,7 +27,9 @@ def update_anchor_links_in_html(soup, dir_path, full_path):
         if new_link == "-1":
             anchor['href'] = link
         elif new_link == "":
-            fail_rows.append([full_path, link])
+            with open('fix.csv', 'a') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow([full_path, link])
         else:
             anchor['href'] = new_link
 
@@ -38,7 +40,9 @@ def update_image_links_in_html(soup, dir_path, full_path):
         if new_link == "-1":
             image['src'] = link
         elif new_link == "":
-            fail_rows.append([full_path, link])
+            with open('fix.csv', 'a') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerow([full_path, link])
         else:
             image['src'] = new_link
 
@@ -63,7 +67,10 @@ def get_updated_link(link, dir_path, attempt):
                 return ""
 
 fail_fields = ['source_file', 'suspicious_link']
-fail_rows = []
+with open('fix.csv', 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(fail_fields)
+
 paths = get_html_paths()
 
 for path in paths:
@@ -75,17 +82,16 @@ for path in paths:
     if "AlabamaCemeteriesWeb/" in rel_path_full:
         rel_path_full = rel_path_full.replace("AlabamaCemeteriesWeb/", "AlabamaCemeteriesImages/")
 
-    dir_path = rel_path_full[:rel_path_full.rindex("/")]
+    try:
+        slash_index = rel_path_full.rindex("/")
+        dir_path = rel_path_full[:slash_index]
+    except:
+        dir_path = rel_path_full
 
-    print("updating links for " + path)
+    print("updating " + dir_path + " links for " + path)
     soup = BeautifulSoup(open(path), "html5lib")
     update_anchor_links_in_html(soup, dir_path, path)
     update_image_links_in_html(soup, dir_path, path)
 
     with open(path, "w") as file:
         file.write(str(soup))
-
-with open('fix.csv', 'w') as csvfile:
-    csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(fail_fields)
-    csvwriter.writerows(fail_rows)
