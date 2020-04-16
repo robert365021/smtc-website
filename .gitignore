@@ -86,3 +86,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+# Mac
+*_vti_pvt
+
+fix.csv
