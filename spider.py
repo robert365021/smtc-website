@@ -7,18 +7,31 @@ from requests.exceptions import HTTPError
 from bs4 import BeautifulSoup
 
 def get_html_paths():
+    visited_paths = {}
+
+    with open('.visited') as f:
+        content = f.readlines()
+    content = [x.strip() for x in content]
+
+    for line in content:
+        visited_paths[line]= line
+
     paths = {}
-    for root, dirnames, filenames in os.walk('./Akers-BrownCemetery'):
+    for root, dirnames, filenames in os.walk('./AlabamaCemeteriesWeb/AlabamaCemWeb-ColbertCo/'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
-            paths[path] = path
+            if path not in visited_paths:
+                paths[path] = path
     return paths
 
 def attempt_update_link(link):
-    if os.path.basename(link).lower().endswith(".html"):
-        return "-1"
+    if link != None:
+        if os.path.basename(link).lower().endswith(".html"):
+            return "-1"
+        else:
+            return get_updated_link(link, dir_path, 0)
     else:
-        return get_updated_link(link, dir_path, 0)
+        return "-1"
 
 def update_anchor_links_in_html(soup, dir_path, full_path):
     for anchor in soup.findAll('a'):
@@ -66,11 +79,6 @@ def get_updated_link(link, dir_path, attempt):
             else:
                 return ""
 
-fail_fields = ['source_file', 'suspicious_link']
-with open('fix.csv', 'w') as csvfile:
-    csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(fail_fields)
-
 paths = get_html_paths()
 
 for path in paths:
@@ -95,3 +103,6 @@ for path in paths:
 
     with open(path, "w") as file:
         file.write(str(soup))
+
+    with open('.visited', "a") as visited_file:
+        visited_file.write(path + "\n")
