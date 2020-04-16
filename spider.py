@@ -17,7 +17,7 @@ def get_html_paths():
         visited_paths[line]= line
 
     paths = {}
-    for root, dirnames, filenames in os.walk('./AlabamaCemeteriesWeb/AlabamaCemWeb-ColbertCo/'):
+    for root, dirnames, filenames in os.walk('.'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
             if path not in visited_paths:
