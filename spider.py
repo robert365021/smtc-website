@@ -5,6 +5,9 @@ import os
 import requests
 from requests.exceptions import HTTPError
 from bs4 import BeautifulSoup
+from datetime import datetime
+
+fix_file_name = "fix-" + datetime.now().strftime("%Y-%m-%d-%H-%M") + ".csv"
 
 def get_html_paths():
     visited_paths = {}
@@ -17,7 +20,7 @@ def get_html_paths():
         visited_paths[line]= line
 
     paths = {}
-    for root, dirnames, filenames in os.walk('.'):
+    for root, dirnames, filenames in os.walk('./HackneyCem'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
             if path not in visited_paths:
@@ -40,7 +43,7 @@ def update_anchor_links_in_html(soup, dir_path, full_path):
         if new_link == "-1":
             anchor['href'] = link
         elif new_link == "":
-            with open('fix.csv', 'a') as csvfile:
+            with open(fix_file_name, 'a') as csvfile:
                 csvwriter = csv.writer(csvfile)
                 csvwriter.writerow([full_path, link])
         else:
@@ -53,7 +56,7 @@ def update_image_links_in_html(soup, dir_path, full_path):
         if new_link == "-1":
             image['src'] = link
         elif new_link == "":
-            with open('fix.csv', 'a') as csvfile:
+            with open(fix_file_name, 'a') as csvfile:
                 csvwriter = csv.writer(csvfile)
                 csvwriter.writerow([full_path, link])
         else:
@@ -78,6 +81,11 @@ def get_updated_link(link, dir_path, attempt):
                 return get_updated_link(link, dir_path, attempt + 1)
             else:
                 return ""
+
+fail_fields = ['source_file', 'suspicious_link']
+with open(fix_file_name, 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    csvwriter.writerow(fail_fields)
 
 paths = get_html_paths()
 

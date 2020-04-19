@@ -68,5 +68,5 @@
 # Mac
 *_vti_pvt
 
-fix.csv
-.visited
+fix*.csv
+.visited*
