@@ -7,12 +7,13 @@ from requests.exceptions import HTTPError
 from bs4 import BeautifulSoup
 from datetime import datetime
 
+visited_file_name = ".visited"
 fix_file_name = "fix-" + datetime.now().strftime("%Y-%m-%d-%H-%M") + ".csv"
 
 def get_html_paths():
     visited_paths = {}
 
-    with open('.visited') as f:
+    with open(visited_file_name) as f:
         content = f.readlines()
     content = [x.strip() for x in content]
 
@@ -20,7 +21,7 @@ def get_html_paths():
         visited_paths[line]= line
 
     paths = {}
-    for root, dirnames, filenames in os.walk('./HackneyCem'):
+    for root, dirnames, filenames in os.walk('.'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
             if path not in visited_paths:
@@ -112,5 +113,5 @@ for path in paths:
     with open(path, "w") as file:
         file.write(str(soup))
 
-    with open('.visited', "a") as visited_file:
+    with open(visited_file_name, "a") as visited_file:
         visited_file.write(path + "\n")
