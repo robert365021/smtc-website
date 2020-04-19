@@ -23,7 +23,7 @@ def get_html_paths():
 
     paths = {}
 
-    for root, dirnames, filenames in os.walk('./test'):
+    for root, dirnames, filenames in os.walk('.'):
         for filename in fnmatch.filter(filenames, '*.html'):
             path = os.path.join(root, filename)
             if path not in visited_paths:
